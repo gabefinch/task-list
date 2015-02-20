@@ -1,12 +1,17 @@
-li {
+li.list {
   cursor: pointer;
   color: #0088cc;
 }
 
-li:hover {
+li.list:hover {
   text-decoration: underline;
+  color: darkCyan;
 }
 
 #list-detail, #list-display {
   display: none;
+}
+span.delete {
+  display: none;
+  color: crimson;
 }
