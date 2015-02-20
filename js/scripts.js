@@ -1,8 +1,36 @@
 var List = {name: ""};
 var Task = {name: "", dueDate: undefined}
+var activeList = null;
+
+var deleteTask = function(deleteClick) {
+  var stringToFind = deleteClick.parent().text().slice(0, -7);
+  for (var i = 0; i < activeList.tasks.length; i++) {
+    if (activeList.tasks[i].name === stringToFind) {
+      activeList.tasks.splice(i,1);
+    }
+  }
+}
+var drawTasks = function() {
+  $('#tasks').empty();
+  activeList.tasks.forEach(function(task) {
+    $('#tasks').append('<li class="task"><h5>' + task.name + ' <span class="delete"><small>delete</small></span></h5></li>');
+  });
+  hoverTask();
+  $(".delete").click(function() {
+    deleteTask($(this));
+    drawTasks();
+  });
+}
+
+var hoverTask = function() {
+  $('.task').hover(function(event) {
+    $(event.target).children().show();
+  }, function(){
+    $('span.delete').hide();
+  });
+}
 
 $(document).ready(function() {
-var activeList = null;
   $("#create-list").submit(function(event) {
     event.preventDefault();
     var listName = $('#new-list-name').val();
@@ -18,13 +46,9 @@ var activeList = null;
       $('#list-name').text(newList.name);
       $('#tasks').empty();
       newList.tasks.forEach(function(task) {
-        $('#tasks').append('<li class="task"><h5>' + newTask.name + ' <span class="delete"><small>delete</small></span></h5></li>');
+        $('#tasks').append('<li class="task"><h5>' + task.name + ' <span class="delete"><small>delete</small></span></h5></li>');
       });
-      $('.task').hover(function(event) {
-        $(event.target).children().show();
-      }, function(){
-        $('span.delete').hide();
-      });
+      drawTasks();
       $('#list-detail').show();
     });
 
@@ -44,20 +68,9 @@ var activeList = null;
     }, function(){
       $('span.delete').hide();
     });
-
     $(".delete").click(function() {
-      var stringToFind = $(this).parent().text().slice(0, -7);
-      for (var i = 0; i < activeList.tasks.length; i++) {
-        if (activeList.tasks[i].name === stringToFind) {
-          activeList.tasks.splice(i,1);
-          debugger;
-
-        }
-      }
-      $('#tasks').empty();
-      activeList.tasks.forEach(function(task) {
-        $('#tasks').append('<li class="task"><h5>' + newTask.name + ' <span class="delete"><small>delete</small></span></h5></li>');
-      });
+      deleteTask($(this));
+      drawTasks();
     });
   });
 
